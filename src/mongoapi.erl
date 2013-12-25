@@ -137,6 +137,9 @@ insert(Rec) ->
 
 batchInsert(Col, [[_|_]|_] = LRecs) ->
 	DocBin = lists:foldl(fun(L, Bin) -> <<Bin/binary, (mongodb:encode(L))/binary>> end, <<>>, LRecs),
+	mongodb:exec_insert(Pool,name(Col), #insert{documents = DocBin});
+batchInsert(Col, [_|_] = LRecs) ->
+	DocBin = lists:foldl(fun(Rec, Bin) -> <<Bin/binary, (mongodb:encoderec(Rec))/binary>> end, <<>>, LRecs),
 	mongodb:exec_insert(Pool,name(Col), #insert{documents = DocBin}).
 batchInsert(LRecs) ->
 	[FRec|_] = LRecs,
