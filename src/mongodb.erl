@@ -12,8 +12,19 @@
 -include_lib("erlmongo.hrl").
 % -compile(export_all).
 
+-define(MONGO_PORT(),
+	case application:get_env(erlmongo, port) of
+		{ok, Port}  -> Port;
+		_ -> 27017
+	end).
 
--define(MONGO_PORT, 27017).
+-define(MONGO_HOST(),
+	case application:get_env(erlmongo, host) of
+		{ok, Host}  -> Host;
+		_ -> "localhost"
+	end).
+	
+	
 -define(RECONNECT_DELAY, 1000).
 
 -define(OP_REPLY, 1).
@@ -89,7 +100,7 @@ is_connected(Pool) ->
 
 singleServer(Pool) ->
 	% gen_server:cast(?MODULE, {conninfo,Pool, {replicaPairs, {"localhost",?MONGO_PORT}, {"localhost",?MONGO_PORT}}}).
-	gen_server:cast(?MODULE, {conninfo,Pool, {masterSlave, {"localhost",?MONGO_PORT}, {"localhost",?MONGO_PORT}}}).
+	gen_server:cast(?MODULE, {conninfo,Pool, {masterSlave, {?MONGO_HOST(),?MONGO_PORT()}, {?MONGO_HOST(),?MONGO_PORT()}}}).
 singleServer(Pool,Addr) ->
 	[IP,Port] = string:tokens(Addr,":"),
 	% gen_server:cast(?MODULE, {conninfo, {single, {Addr,Port}}}).
