@@ -389,6 +389,8 @@ count(ColIn, Query) ->
 	case true of
 		_ when is_list(ColIn) ->
 			Col = list_to_binary(ColIn);
+		_ when is_atom(ColIn) ->
+			Col = list_to_binary(atom_to_list(ColIn));
 		_ when is_tuple(ColIn) ->
 			Col = atom_to_binary(element(1,ColIn), latin1);
 		_ ->
