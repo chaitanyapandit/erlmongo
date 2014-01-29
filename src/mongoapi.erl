@@ -390,7 +390,7 @@ count(ColIn, Query) ->
 		_ when is_list(ColIn) ->
 			Col = list_to_binary(ColIn);
 		_ when is_atom(ColIn) ->
-			Col = list_to_binary(atom_to_list(ColIn));
+			Col = atom_to_binary(ColIn, latin1);
 		_ when is_tuple(ColIn) ->
 			Col = atom_to_binary(element(1,ColIn), latin1);
 		_ ->
@@ -464,6 +464,8 @@ cloneDatabase(From) when is_list(From); is_binary(From) ->
 
 dropCollection(C) when is_tuple(C) ->
 	dropCollection(atom_to_binary(element(1,C),latin1));
+dropCollection(Ca) when is_atom(Ca) ->
+	dropCollection(atom_to_binary(Ca, latin1));
 dropCollection(Collection) ->
 	mongodb:clearIndexCache(),
 	runCmd([{"drop", Collection}]).
