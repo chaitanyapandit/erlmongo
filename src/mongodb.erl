@@ -748,6 +748,7 @@ connection(#con{} = P,Index,Buf) ->
 			% io:format("~p~n", [{byte_size(Bin), Buf}]),
 			connection(P,Index,readpacket(<<Buf/binary,Bin/binary>>));
 		{garbage_collect} ->
+			garbage_collect(),
 			erlang:send_after(?GC_INTERVAL, self(),{garbage_collect}),
 			connection(P,Index, Buf);
 		{ping} ->

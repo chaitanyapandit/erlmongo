@@ -7,7 +7,7 @@ start_link() ->
 
 
 init([]) ->
-	{ok, {{one_for_one, 10, 1},
+	{ok, {{one_for_one, 100000, 1},
 		 [
 		  {mongodb,
 			{mongodb, start, []},
