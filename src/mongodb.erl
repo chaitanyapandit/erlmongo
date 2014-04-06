@@ -747,10 +747,6 @@ connection(#con{} = P,Index,Buf) ->
 		{tcp, _, Bin} ->
 			% io:format("~p~n", [{byte_size(Bin), Buf}]),
 			connection(P,Index,readpacket(<<Buf/binary,Bin/binary>>));
-		{garbage_collect} ->
-			garbage_collect(),
-			erlang:send_after(?GC_INTERVAL, self(),{garbage_collect}),
-			connection(P,Index, Buf);
 		{ping} ->
 			erlang:send_after(1000,self(),{ping}),
 			Collection = <<"admin.$cmd">>,
@@ -780,7 +776,6 @@ connection(#con{} = P,Index,Buf) ->
 					Source ! {conn_established, Pool, Type, self()}
 			end,
 			erlang:send_after(1000,self(),{ping}),
-			erlang:send_after(?GC_INTERVAL, self(),{garbage_collect}),
 			connection(#con{sock = Sock},1, <<>>);
 		{tcp_closed, _} ->
 			exit(stop)
