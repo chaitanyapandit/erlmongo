@@ -1,3 +1,4 @@
+-include_lib("pmod_transform/include/pmod.hrl").
 -module(mongoapi, [Pool,DB]).
 % -export([save/1,findOne/2,findOne/1,find/1,find/2,find/3,find/4, update/2, insert/1]).
 -compile(export_all).
