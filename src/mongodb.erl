@@ -1158,8 +1158,9 @@ encode_element(A, _Style) ->
 
 % default behaviour
 encode_element({Name, {near, [{Lon, Lat}, {maxDistance, Radius}]}}) ->
-  io:format("TEST***: CAME HERE Lon: ~p Lat:~p maxDistance:~p~n", [Lon, Lat, Radius]),
 	encode_element({Name, [{<<"$near">>, {array, [Lon, Lat]}}, {<<"$maxDistance">>, Radius}]});
+encode_element({Name, {geoWithin, [{Lon, Lat}, {centerSphere, Radius}]}}) ->
+	encode_element({Name, [{<<"$geoWithin">>, [{<<"$centerSphere">>, {array, [{array, [Lon, Lat]}, Radius]}}]}]});
 encode_element({[_|_] = Name, Val}) ->
 	encode_element({list_to_binary(Name),Val});
 encode_element({<<_/binary>> = Name, [{_,_}|_] = Items}) ->
